@@ -1,9 +1,10 @@
 import 'package:badges/badges.dart';
 import 'package:car_rental_app/core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends GetView<HomeController> {
   const HomeView({Key key}) : super(key: key);
 
   @override
@@ -39,8 +40,118 @@ class HomeView extends StatelessWidget {
       child: Column(
         children: [
           _buildScreenHeader(),
+          SizedBox(height: 8.0),
+          _buildCarImage(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildCarName(),
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Row(
+                  children: [
+                    Text(
+                      'My garage',
+                      style: TextStyle(
+                        color: kPrimaryColor,
+                        fontSize: 17.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(width: 8.0),
+                    Icon(
+                      Icons.arrow_forward,
+                      size: 23.0,
+                      color: kPrimaryColor,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ],
       ),
+    );
+  }
+
+  Column _buildCarName() {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Text(
+            controller.displayCar.model,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 35.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        SizedBox(height: 2.0),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Text(
+            controller.displayCar.brand,
+            style: TextStyle(
+              color: Colors.grey,
+              fontSize: 20.0,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  ValueBuilder<int> _buildCarImage() {
+    return ValueBuilder<int>(
+      initialValue: 0,
+      builder: (currentImage, updateFn) => Column(
+        children: [
+          Container(
+            height: 150,
+            child: PageView(
+              physics: BouncingScrollPhysics(),
+              onPageChanged: updateFn,
+              children: controller.displayCar.images.map((path) {
+                return Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Image.asset(
+                    path,
+                    fit: BoxFit.scaleDown,
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+          controller.displayCar.images.length > 1
+              ? Container(
+                  height: 30.0,
+                  margin: EdgeInsets.only(top: 12.0, bottom: 0.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: controller.displayCar.images
+                        .map((image) => _buildIndicator(
+                            controller.displayCar.images.indexOf(image) ==
+                                currentImage))
+                        .toList(),
+                  ),
+                )
+              : Container()
+        ],
+      ),
+    );
+  }
+
+  Widget _buildIndicator(bool isActive) {
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 150),
+      margin: EdgeInsets.symmetric(horizontal: 6),
+      height: 8,
+      width: isActive ? 20 : 8,
+      decoration: BoxDecoration(
+          color: isActive ? Colors.black : Colors.grey[400],
+          borderRadius: BorderRadius.all(Radius.circular(12))),
     );
   }
 
