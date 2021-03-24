@@ -1,5 +1,6 @@
 import 'package:badges/badges.dart';
 import 'package:car_rental_app/core.dart';
+import 'package:car_rental_app/shared/widgets/car_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
@@ -20,8 +21,120 @@ class HomeView extends GetView<HomeController> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 buildHeader(),
+                buildAvailableCars(),
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'TOP DEALS',
+                            style: TextStyle(
+                              color: Colors.grey[400],
+                              fontWeight: FontWeight.bold,
+                              fontSize: 22.0,
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                'More',
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                  color: kPrimaryColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(width: 8.0),
+                              Icon(
+                                Icons.arrow_forward_ios,
+                                size: 12.0,
+                                color: kPrimaryColor,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: 280.0,
+                      child: ListView(
+                        physics: BouncingScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        children: controller.cars
+                            .map((car) => GestureDetector(
+                                  onTap: () {},
+                                  child: buildCar(
+                                      car, controller.cars.indexOf(car)),
+                                ))
+                            .toList(),
+                      ),
+                    ),
+                  ],
+                )
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  GestureDetector buildAvailableCars() {
+    return GestureDetector(
+      onTap: () {},
+      child: Padding(
+        padding: EdgeInsets.only(top: 20.0, right: 16.0, left: 16.0),
+        child: Container(
+          decoration: BoxDecoration(
+            color: kPrimaryColor,
+            borderRadius: BorderRadius.all(
+              Radius.circular(15.0),
+            ),
+          ),
+          padding: EdgeInsets.all(24.0),
+          height: 100,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Available Cars',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 22.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    'For long and short term rental',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(15.0),
+                  ),
+                ),
+                height: 50.0,
+                width: 50.0,
+                child: Icon(
+                  Icons.arrow_forward_ios,
+                  color: kPrimaryColor,
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -60,7 +173,7 @@ class HomeView extends GetView<HomeController> {
                     ),
                     SizedBox(width: 8.0),
                     Icon(
-                      Icons.arrow_forward,
+                      Icons.arrow_forward_ios,
                       size: 23.0,
                       color: kPrimaryColor,
                     ),
